@@ -3,4 +3,5 @@
     <string name="dest_title">Destination folder :</string>
     <string name="app_name">MoveOver</string>
     <string name="source_title">Source folder :</string>
+    <string name="service_title">Service</string>
 </resources>
