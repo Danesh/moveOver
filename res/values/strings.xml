@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dest_title">Destination folder :</string>
+    <string name="app_name">MoveOver</string>
+    <string name="source_title">Source folder :</string>
+</resources>
