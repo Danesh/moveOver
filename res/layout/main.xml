@@ -3,13 +3,13 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     >
     <TextView android:text="@string/source_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView1"></TextView>
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/source">
-        <requestFocus></requestFocus>
-    </EditText>
+    <EditText android:singleLine="true" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/source"/>
     <TextView android:text="@string/dest_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView2"></TextView>
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/dest"></EditText>
+    <EditText android:singleLine="true" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/dest"/>
     <RelativeLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="fill_parent">
     <ToggleButton android:text="ToggleButton" android:textOn="Service : On" android:textOff="Service : Off" android:id="@+id/toggleButton1" android:layout_width="wrap_content" android:layout_height="wrap_content"></ToggleButton>
     <Button android:layout_alignParentRight="true" android:text="Add" android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
