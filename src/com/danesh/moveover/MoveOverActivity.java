@@ -1,7 +1,9 @@
 package com.danesh.moveover;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -24,14 +27,14 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class MoveOverActivity extends Activity implements OnCheckedChangeListener,OnClickListener,OnItemClickListener,OnItemLongClickListener {
     String sdcard = Environment.getExternalStorageDirectory().toString()+"/";
-    String sourceFolder = sdcard+"DCIM"+"/";
-    String destFolder = sdcard+"synca"+"/";
+    String sourceFolder = "/mnt/sdcard/MoveOver/from/";
+    String destFolder = "/mnt/sdcard/MoveOver/to/";
     TextView source,dest;
     ToggleButton service;
     ListView myList;
     Button add;
     ArrayList<String> results;
-    Map<String, ?> sharedMap;
+    static Map<String, ?> sharedMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         sharedMap = myPrefs.getAll();
         for (String item : sharedMap.keySet()){
-            print(item);
             results.add("Source : " + item + "\nDestination : " + sharedMap.get(item));
         }
         myList.setAdapter(new ArrayAdapter<String>(this, R.layout.row, R.id.label, results));
@@ -68,8 +70,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         Intent mine = new Intent(this, LocalService.class);
         if (isChecked){
-            mine.putExtra("source", source.getText().toString());
-            mine.putExtra("dest", dest.getText().toString());
             startService(mine);
         }else{
             stopService(mine);    
@@ -80,8 +80,18 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         System.out.println("Danny "+msg);
     }
 
+    public void showToast(String msg) {
+        Toast pop = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        pop.show();
+    }
+
     @Override
     public void onClick(View arg0) {
+        File test = new File(source.getText().toString());
+        if (!test.isDirectory()){
+            showToast("Directory invalid or is not a directory");
+            return;
+        }
         modifyPreference(1,0);
     }
 
@@ -94,12 +104,12 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     public void modifyPreference(int mode, int arg2){
-        String sourceText = results.get(arg2).split("\n")[0].replaceFirst("Source : ", "").trim();
         SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
         if (mode == 1){
             prefsEditor.putString(source.getText().toString(), dest.getText().toString());
         }else{
+            String sourceText = results.get(arg2).split("\n")[0].replaceFirst("Source : ", "").trim();
             prefsEditor.remove(sourceText);
         }
         prefsEditor.commit();
