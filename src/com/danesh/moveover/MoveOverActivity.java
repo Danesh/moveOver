@@ -43,6 +43,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         source.setText(sourceFolder);
         dest.setText(destFolder);
         service = (ToggleButton)findViewById(R.id.toggleButton1);
+        service.setChecked(LocalService.serviceRunning);
         service.setOnCheckedChangeListener(this);
         myList = (ListView)findViewById(R.id.listView1);
         myList.setOnItemClickListener(this);
