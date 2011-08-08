@@ -87,9 +87,20 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
 
     @Override
     public void onClick(View arg0) {
-        File test = new File(source.getText().toString());
-        if (!test.isDirectory()){
-            showToast("Directory invalid or is not a directory");
+        File testsource = new File(source.getText().toString());
+        File testdest = new File(dest.getText().toString());
+        if (testsource.getName().charAt(testsource.getName().length()-1)!='/'){
+            source.setText(source.getText()+"/");
+        }
+        if (testdest.getName().charAt(testdest.getName().length()-1)!='/'){
+            dest.setText(dest.getText()+"/");
+        }
+        if (!testsource.isDirectory()){
+            showToast("Source directory invalid or is not a directory");
+            return;
+        }
+        if (!testdest.isDirectory()){
+            showToast("Destination directory invalid or is not a directory");
             return;
         }
         modifyPreference(1,0);
@@ -108,6 +119,8 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
         if (mode == 1){
             prefsEditor.putString(source.getText().toString(), dest.getText().toString());
+            dest.setText("");
+            source.setText("");
         }else{
             String sourceText = results.get(arg2).split("\n")[0].replaceFirst("Source : ", "").trim();
             prefsEditor.remove(sourceText);

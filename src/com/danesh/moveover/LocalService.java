@@ -1,8 +1,6 @@
 package com.danesh.moveover;
 
 import java.io.File;
-import java.util.Map;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
