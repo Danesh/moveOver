@@ -3,7 +3,6 @@ package com.danesh.moveover;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,8 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,6 +40,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         print("------------------------------------------------");
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         source = (TextView)findViewById(R.id.source);
         dest = (TextView)findViewById(R.id.dest);
@@ -69,6 +69,11 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (sharedMap.isEmpty()){
+            showToast("Nothing is being tracked");
+            service.setChecked(!isChecked);
+            return;
+        }
         Intent mine = new Intent(this, LocalService.class);
         if (isChecked){
             startService(mine);

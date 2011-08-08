@@ -7,13 +7,18 @@
     android:focusableInTouchMode="true"
     android:background="#CC000000"
     >
+    <RelativeLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="fill_parent">
+    <TextView android:text="MoveOver - Beta" android:layout_centerInParent="true" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_height="wrap_content"/>
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon"/>
+    <ImageView android:layout_width="wrap_content" android:id="@+id/imageView1" android:layout_height="wrap_content" android:src="@drawable/icon" android:layout_alignParentTop="true" android:layout_alignParentRight="true"></ImageView>
+    </RelativeLayout>
     <TextView android:text="@string/source_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView1"></TextView>
     <EditText android:singleLine="true" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/source"/>
     <TextView android:text="@string/dest_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView2"></TextView>
     <EditText android:singleLine="true" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/dest"/>
-    <RelativeLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="fill_parent">
+    <RelativeLayout android:paddingTop="5dp" android:paddingBottom="5dp" android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="fill_parent">
     <ToggleButton android:text="ToggleButton" android:textOn="Service : On" android:textOff="Service : Off" android:id="@+id/toggleButton1" android:layout_width="wrap_content" android:layout_height="wrap_content"></ToggleButton>
-    <Button android:layout_alignParentRight="true" android:text="Add" android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    <Button android:layout_alignParentRight="true" android:text="Add" android:id="@+id/button1" android:layout_width="95dp" android:layout_height="wrap_content"></Button>
     </RelativeLayout>
     <ListView android:id="@+id/listView1" android:layout_height="wrap_content" android:layout_width="match_parent"></ListView>
 </LinearLayout>

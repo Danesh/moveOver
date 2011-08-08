@@ -14,16 +14,17 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int button1=0x7f050006;
-        public static final int dest=0x7f050003;
-        public static final int label=0x7f050008;
-        public static final int label2=0x7f050009;
-        public static final int linearLayout1=0x7f050004;
-        public static final int listView1=0x7f050007;
-        public static final int source=0x7f050001;
-        public static final int textView1=0x7f050000;
-        public static final int textView2=0x7f050002;
-        public static final int toggleButton1=0x7f050005;
+        public static final int button1=0x7f050007;
+        public static final int dest=0x7f050005;
+        public static final int imageView1=0x7f050001;
+        public static final int label=0x7f050009;
+        public static final int label2=0x7f05000a;
+        public static final int linearLayout1=0x7f050000;
+        public static final int listView1=0x7f050008;
+        public static final int source=0x7f050003;
+        public static final int textView1=0x7f050002;
+        public static final int textView2=0x7f050004;
+        public static final int toggleButton1=0x7f050006;
     }
     public static final class layout {
         public static final int main=0x7f030000;
