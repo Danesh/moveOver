@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -89,10 +90,10 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     public void onClick(View arg0) {
         File testsource = new File(source.getText().toString());
         File testdest = new File(dest.getText().toString());
-        if (testsource.getName().charAt(testsource.getName().length()-1)!='/'){
+        if (source.getText().charAt(source.length()-1)!='/'){
             source.setText(source.getText()+"/");
         }
-        if (testdest.getName().charAt(testdest.getName().length()-1)!='/'){
+        if (dest.getText().charAt(dest.getText().length()-1)!='/'){
             dest.setText(dest.getText()+"/");
         }
         if (!testsource.isDirectory()){

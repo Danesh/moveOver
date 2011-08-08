@@ -5,6 +5,7 @@
     android:layout_height="fill_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="#CC000000"
     >
     <TextView android:text="@string/source_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView1"></TextView>
     <EditText android:singleLine="true" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/source"/>
