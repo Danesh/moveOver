@@ -36,6 +36,10 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     Button add;
     static Map<String, ?> sharedMap;
 
+    public static String getMap(String item) {
+        return sharedMap.get(item).toString();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

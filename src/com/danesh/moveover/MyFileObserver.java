@@ -13,6 +13,7 @@ public class MyFileObserver extends FileObserver{
     String destPath,sourcePath;
     public MyFileObserver(String source, String dest) {
         super(source);
+        MoveOverActivity.print(source + " " + dest);
         sourcePath = source;
         destPath = dest;
     }

@@ -50,13 +50,12 @@ public class LocalService extends Service {
      * @param item Target folder to set as destination
      */
     public static void cycleThrough(File sourceDir, String item){
-        MoveOverActivity.print(sourceDir + " " + item);
         for (File file : sourceDir.listFiles()){
             if (file.isDirectory()){
                 cycleThrough(file, item);
             }
         }
-        MyFileObserver newOne = new MyFileObserver(sourceDir.getPath().toString()+"/",item);
+        MyFileObserver newOne = new MyFileObserver(sourceDir.getPath().toString()+"/",item+"/");
         newOne.startWatching();
     }
 
@@ -66,11 +65,11 @@ public class LocalService extends Service {
         displayNotification(0,"Service is running","Click to launch");
         for (String item : MoveOverActivity.sharedMap.keySet()){
             File sourceDir = new File(item);
-            MyFileObserver newOne = new MyFileObserver(item,MoveOverActivity.sharedMap.get(item).toString());
+            MyFileObserver newOne = new MyFileObserver(item,MoveOverActivity.getMap(item).toString());
             newOne.startWatching();
             for (File file : sourceDir.listFiles()){
                 if (file.isDirectory()){
-                    cycleThrough(file,MoveOverActivity.sharedMap.get(item).toString()+file.getPath().replaceFirst(sourceDir.getPath()+"/", "")+"/");
+                    cycleThrough(file,MoveOverActivity.getMap(item) + file.getPath().replaceFirst(sourceDir.getPath()+"/", ""));
                 }
             }
         }
