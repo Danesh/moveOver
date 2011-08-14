@@ -20,18 +20,16 @@ public class MyFileObserver extends FileObserver{
     @Override
     public void onEvent(int event, String path) {
         if ((FileObserver.CREATE & event)!=0) {
-            MoveOverActivity.print("NEW FILE : "+path);
-            File source = new File(sourcePath + "/"+path);
-            File dest = new File(destPath+"/"+path);
-            MoveOverActivity.print(source.toString());
-            MoveOverActivity.print(dest.toString());
+            File source = new File(sourcePath+path);
+            File dest = new File(destPath+path);
+            MoveOverActivity.print("Copy : " + source.toString() + " to : " + dest.toString());
             try {
                 copyDirectory(source,dest);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (source.isDirectory()){
-                LocalService.cycleThrough(source, dest.toString(),1);
+                LocalService.cycleThrough(source, dest.toString());
             }
         }
     }

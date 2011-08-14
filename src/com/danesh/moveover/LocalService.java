@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
 
 public class LocalService extends Service {
@@ -21,18 +20,20 @@ public class LocalService extends Service {
 
     @Override
     public void onCreate() {
-
     }
+
     @Override    
     public void onStart(Intent intent, int startId){
         super.onStart(intent, startId);
         onStartCommand(intent,0,startId);
     }
+
     @Override
     public void onDestroy() {
         serviceRunning = false;
         manager.cancelAll();
     }
+
     public void displayNotification(int id, String ticker, String msg){
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification1 = new Notification(R.drawable.icon, ticker, System.currentTimeMillis());
@@ -42,36 +43,34 @@ public class LocalService extends Service {
         manager.notify(id, notification1);
     }
 
-    public static void cycleThrough(File sourceDir, String item, int mode){
+    /**
+     * Cycles through folders and registers any subfolders
+     * Parameters :
+     * @param sourceDir Source folder to cycle through
+     * @param item Target folder to set as destination
+     */
+    public static void cycleThrough(File sourceDir, String item){
+        MoveOverActivity.print(sourceDir + " " + item);
         for (File file : sourceDir.listFiles()){
             if (file.isDirectory()){
-                cycleThrough(file, item, 0);
+                cycleThrough(file, item);
             }
         }
-        if (mode == 0){
-            MyFileObserver newOne = new MyFileObserver(sourceDir.getPath().toString()+"/",MoveOverActivity.sharedMap.get(item).toString()+"/");
-            newOne.startWatching();
-        }else if (mode == 1){
-            MyFileObserver newOne = new MyFileObserver(sourceDir.getPath().toString()+"/",item+"/");
-            newOne.startWatching();
-        }
+        MyFileObserver newOne = new MyFileObserver(sourceDir.getPath().toString()+"/",item);
+        newOne.startWatching();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         serviceRunning = true;
         displayNotification(0,"Service is running","Click to launch");
-        SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
-        MoveOverActivity.sharedMap = myPrefs.getAll();
         for (String item : MoveOverActivity.sharedMap.keySet()){
             File sourceDir = new File(item);
-            MyFileObserver newOne = new MyFileObserver(sourceDir.getPath().toString()+"/",MoveOverActivity.sharedMap.get(item).toString()+"/");
+            MyFileObserver newOne = new MyFileObserver(item,MoveOverActivity.sharedMap.get(item).toString());
             newOne.startWatching();
-            if (sourceDir.isDirectory()){
-                for (File file : sourceDir.listFiles()){
-                    if (file.isDirectory()){
-                        cycleThrough(sourceDir,item, 0);
-                    }
+            for (File file : sourceDir.listFiles()){
+                if (file.isDirectory()){
+                    cycleThrough(file,MoveOverActivity.sharedMap.get(item).toString()+file.getPath().replaceFirst(sourceDir.getPath()+"/", "")+"/");
                 }
             }
         }

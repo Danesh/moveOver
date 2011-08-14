@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:orientation="horizontal"
+android:orientation="vertical"
 >
 <TextView
-android:id="@+id/label"
+android:id="@+id/source"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:textSize="15dp"
 />
 <TextView
-android:id="@+id/label2"
+android:id="@+id/destination"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:textSize="15dp"

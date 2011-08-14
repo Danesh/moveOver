@@ -1,7 +1,6 @@
 package com.danesh.moveover;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,13 +28,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class MoveOverActivity extends Activity implements OnCheckedChangeListener,OnClickListener,OnItemClickListener,OnItemLongClickListener {
     String sdcard = Environment.getExternalStorageDirectory().toString()+"/";
-    String sourceFolder = "/mnt/sdcard/MoveOver/from/";
-    String destFolder = "/mnt/sdcard/MoveOver/to/";
+    String sourceFolder = "/mnt/sdcard/DCIM";
+    String destFolder = "/mnt/sdcard/Test";
     TextView source,dest;
     ToggleButton service;
     ListView myList;
     Button add;
-    ArrayList<String> results;
     static Map<String, ?> sharedMap;
 
     @Override
@@ -58,13 +58,28 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     private void setAdapter() {
-        results = new ArrayList<String>();
         SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         sharedMap = myPrefs.getAll();
-        for (String item : sharedMap.keySet()){
-            results.add("Source : " + item + "\nDestination : " + sharedMap.get(item));
+        myList.setAdapter(new IconicAdapter());
+    }
+
+    class IconicAdapter extends ArrayAdapter<Object> {
+        IconicAdapter(){
+            super(MoveOverActivity.this, android.R.layout.simple_list_item_1, sharedMap.values().toArray());
         }
-        myList.setAdapter(new ArrayAdapter<String>(this, R.layout.row, R.id.label, results));
+
+        public View getView(int pos, View convertView, ViewGroup parent){
+            LayoutInflater inf = getLayoutInflater();
+            if(convertView==null){
+                convertView = inf.inflate(R.layout.row,null);
+            }
+            TextView label = (TextView) convertView.findViewById(R.id.source);
+            label.setText(sharedMap.keySet().toArray()[0].toString());
+            label = (TextView) convertView.findViewById(R.id.destination);
+            label.setText(sharedMap.values().toArray()[0].toString());
+            return convertView;
+        }
+
     }
 
     @Override
@@ -109,18 +124,20 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             showToast("Destination directory invalid or is not a directory");
             return;
         }
-        modifyPreference(1,0);
+        modifyPreference(1,"");
     }
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        String sourceText = results.get(arg2).split("\n")[0].replaceFirst("Source : ", "").trim();
-        String destText = results.get(arg2).split("\n")[1].replaceFirst("Destination : ", "").trim();
+        TextView sourceView = (TextView) arg1.findViewById(R.id.source);
+        TextView destView = (TextView) arg1.findViewById(R.id.destination);
+        String sourceText = sourceView.getText().toString();
+        String destText = destView.getText().toString();
         source.setText(sourceText);
         dest.setText(destText);
     }
 
-    public void modifyPreference(int mode, int arg2){
+    public void modifyPreference(int mode, String preference){
         SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
         if (mode == 1){
@@ -128,21 +145,22 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             dest.setText("");
             source.setText("");
         }else{
-            String sourceText = results.get(arg2).split("\n")[0].replaceFirst("Source : ", "").trim();
-            prefsEditor.remove(sourceText);
+            prefsEditor.remove(preference);
         }
         prefsEditor.commit();
         setAdapter();
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
+    public boolean onItemLongClick(AdapterView<?> arg0, final View arg1, final int arg2, long arg3) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you delete?")
                .setCancelable(false)
                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
-                        modifyPreference(0,arg2);
+                       TextView sourceView = (TextView) arg1.findViewById(R.id.source);
+                       String sourceText = sourceView.getText().toString();
+                       modifyPreference(0,sourceText);
                    }
                })
                .setNegativeButton("No", new DialogInterface.OnClickListener() {
