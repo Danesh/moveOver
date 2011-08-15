@@ -79,7 +79,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
 
     class IconicAdapter extends ArrayAdapter<Object> {
         IconicAdapter(){
-            super(MoveOverActivity.this, android.R.layout.simple_list_item_1, sharedMap.values().toArray());
+            super(MoveOverActivity.this, android.R.layout.simple_list_item_1, sharedMap.keySet().toArray());
         }
 
         public View getView(int pos, View convertView, ViewGroup parent){
@@ -88,9 +88,9 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 convertView = inf.inflate(R.layout.row,null);
             }
             TextView label = (TextView) convertView.findViewById(R.id.source);
-            label.setText(sharedMap.keySet().toArray()[0].toString());
+            label.setText(getResources().getString(R.string.source_heading) + " " + sharedMap.keySet().toArray()[pos].toString());
             label = (TextView) convertView.findViewById(R.id.destination);
-            label.setText(sharedMap.values().toArray()[0].toString());
+            label.setText(getResources().getString(R.string.dest_heading) + " " + sharedMap.values().toArray()[pos].toString());
             return convertView;
         }
 
