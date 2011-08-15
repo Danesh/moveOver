@@ -1,12 +1,17 @@
 package com.danesh.moveover;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -18,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +36,10 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     String sdcard = Environment.getExternalStorageDirectory().toString()+"/";
     String sourceFolder = "/mnt/sdcard/DCIM";
     String destFolder = "/mnt/sdcard/Test";
-    TextView source,dest;
+    EditText source,dest;
     ToggleButton service;
     ListView myList;
-    Button add;
+    Button add,chooseSource,chooseDest;
     static Map<String, ?> sharedMap;
 
     public static String getMap(String item) {
@@ -46,18 +52,22 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         print("------------------------------------------------");
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
-        source = (TextView)findViewById(R.id.source);
-        dest = (TextView)findViewById(R.id.dest);
+        source = (EditText)findViewById(R.id.source);
+        dest = (EditText)findViewById(R.id.dest);
         source.setText(sourceFolder);
         dest.setText(destFolder);
-        service = (ToggleButton)findViewById(R.id.toggleButton1);
+        service = (ToggleButton)findViewById(R.id.toggleService);
         service.setChecked(LocalService.serviceRunning);
         service.setOnCheckedChangeListener(this);
         myList = (ListView)findViewById(R.id.listView1);
         myList.setOnItemClickListener(this);
         myList.setOnItemLongClickListener(this);
-        add = (Button)findViewById(R.id.button1);
+        add = (Button)findViewById(R.id.add);
         add.setOnClickListener(this);
+        chooseSource = (Button)findViewById(R.id.chooseSource);
+        chooseSource.setOnClickListener(this);
+        chooseDest = (Button)findViewById(R.id.chooseDest);
+        chooseDest.setOnClickListener(this);
         setAdapter();
     }
 
@@ -100,7 +110,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             stopService(mine);    
         }
     }
-    
+
     public static void print(String msg){
         System.out.println("Danny "+msg);
     }
@@ -110,25 +120,53 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         pop.show();
     }
 
+    private boolean appInstalledOrNot(Intent intent)
+    {
+        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
     @Override
     public void onClick(View arg0) {
-        File testsource = new File(source.getText().toString());
-        File testdest = new File(dest.getText().toString());
-        if (source.getText().charAt(source.length()-1)!='/'){
-            source.setText(source.getText()+"/");
+        if (arg0==chooseSource || arg0 == chooseDest){
+            Intent intent = new Intent("org.openintents.action.PICK_DIRECTORY");
+            if (appInstalledOrNot(intent)){
+                startActivityForResult(intent, arg0 == chooseSource ? 0 : 1);
+            }else{
+                showToast("OI file manager not found");
+                intent = new Intent( Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:org.openintents.filemanager"));
+                startActivity(intent);
+            }
+        }else if (arg0 == add){
+            File testsource = new File(source.getText().toString());
+            File testdest = new File(dest.getText().toString());
+            if (source.getText().charAt(source.length()-1)!='/'){
+                source.setText(source.getText()+"/");
+            }
+            if (dest.getText().charAt(dest.getText().length()-1)!='/'){
+                dest.setText(dest.getText()+"/");
+            }
+            if (!testsource.isDirectory()){
+                showToast("Source directory invalid or is not a directory");
+                return;
+            }
+            if (!testdest.isDirectory()){
+                showToast("Destination directory invalid or is not a directory");
+                return;
+            }
+            modifyPreference(1,"");
         }
-        if (dest.getText().charAt(dest.getText().length()-1)!='/'){
-            dest.setText(dest.getText()+"/");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data!=null){
+            if (requestCode == 0){
+                source.setText(data.getData().getPath()+"/");
+            }else{
+                dest.setText(data.getData().getPath()+"/");
+            }
         }
-        if (!testsource.isDirectory()){
-            showToast("Source directory invalid or is not a directory");
-            return;
-        }
-        if (!testdest.isDirectory()){
-            showToast("Destination directory invalid or is not a directory");
-            return;
-        }
-        modifyPreference(1,"");
     }
 
     @Override
@@ -159,19 +197,19 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     public boolean onItemLongClick(AdapterView<?> arg0, final View arg1, final int arg2, long arg3) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you delete?")
-               .setCancelable(false)
-               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       TextView sourceView = (TextView) arg1.findViewById(R.id.source);
-                       String sourceText = sourceView.getText().toString();
-                       modifyPreference(0,sourceText);
-                   }
-               })
-               .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                   }
-               });
+        .setCancelable(false)
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                TextView sourceView = (TextView) arg1.findViewById(R.id.source);
+                String sourceText = sourceView.getText().toString();
+                modifyPreference(0,sourceText);
+            }
+        })
+        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
         builder.create().show();
         return false;
     }
