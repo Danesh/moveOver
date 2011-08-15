@@ -15,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -69,6 +71,18 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         chooseDest = (Button)findViewById(R.id.chooseDest);
         chooseDest.setOnClickListener(this);
         setAdapter();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+            menu.add(0, 0, 0, "Exit");
+            return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        this.finish();
+        return true;
     }
 
     private void setAdapter() {
