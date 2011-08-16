@@ -45,7 +45,11 @@
 		<Button android:layout_alignParentRight="true" android:text="Add"
 			android:id="@+id/add" android:layout_width="95dp"
 			android:layout_height="wrap_content" />
+		<Button android:layout_height="wrap_content" android:id="@+id/onBoot"
+			android:layout_width="wrap_content" android:text="Button"
+			android:layout_alignParentTop="true" android:layout_centerHorizontal="true" android:layout_toLeftOf="@id/add"
+			android:layout_marginRight="19dp"></Button>
 	</RelativeLayout>
 	<ListView android:id="@+id/listView1" android:layout_height="wrap_content"
-		android:layout_width="match_parent" />
+		android:layout_width="match_parent" android:layout_marginLeft="5dp" />
 </LinearLayout>
