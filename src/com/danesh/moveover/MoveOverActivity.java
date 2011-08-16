@@ -152,13 +152,15 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 startActivity(intent);
             }
         }else if (arg0 == add){
-            File testsource = new File(source.getText().toString());
-            File testdest = new File(dest.getText().toString());
-            if (source.getText().charAt(source.length()-1)!='/'){
-                source.setText(source.getText()+"/");
+            String sourceText = source.getText().toString();
+            String destText = dest.getText().toString();
+            File testsource = new File(sourceText);
+            File testdest = new File(destText);
+            if (sourceText.charAt(sourceText.length()-1)!='/'){
+                source.setText(sourceText+"/");
             }
-            if (dest.getText().charAt(dest.getText().length()-1)!='/'){
-                dest.setText(dest.getText()+"/");
+            if (destText.charAt(destText.length()-1)!='/'){
+                dest.setText(destText+"/");
             }
             if (!testsource.isDirectory()){
                 showToast("Source directory invalid or is not a directory");
@@ -168,15 +170,23 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 showToast("Destination directory invalid or is not a directory");
                 return;
             }
-            if (!source.getText().toString().contains("/sdcard/") || !dest.getText().toString().contains("/sdcard/")){
+            if (!sourceText.contains("/sdcard/") || !destText.contains("/sdcard/")){
                 ShellCommand root = new ShellCommand();
                 if (!root.canSU()){
                     showToast("Root was not found");
                     return;
                 }
             }
-            if (checkIfSourceIsTarget(source.getText().toString())){
-                showToast("This was already saved as a target");
+            if (checkIfSourceIsTarget(sourceText)){
+                showToast("This source was already saved as a target");
+                return;
+            }
+            if (sourceText.equals(destText)){
+                showToast("Source cannot be same as target");
+                return;
+            }
+            if (checkIfMappingAlreadyExists(sourceText,destText)){
+                showToast("This mapping already exists");
                 return;
             }
             modifyPreference(1,"");
@@ -184,7 +194,11 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     public boolean checkIfSourceIsTarget(String source){
-        return sharedMap.values().contains("source");
+        return sharedMap.values().contains(source);
+    }
+
+    public boolean checkIfMappingAlreadyExists(String source, String target){
+        return sharedMap.keySet().contains(source) && sharedMap.get(source).equals(target);
     }
 
     @Override
