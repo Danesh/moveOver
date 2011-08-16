@@ -201,7 +201,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     public void modifyPreference(int mode, String preference){
-        print(preference);
         SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
         if (mode == 1){
