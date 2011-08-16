@@ -75,8 +75,8 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-            menu.add(0, 0, 0, "Exit");
-            return true;
+        menu.add(0, 0, 0, "Exit");
+        return true;
     }
 
     @Override
@@ -175,8 +175,16 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                     return;
                 }
             }
+            if (checkIfSourceIsTarget(source.getText().toString())){
+                showToast("This was already saved as a target");
+                return;
+            }
             modifyPreference(1,"");
         }
+    }
+
+    public boolean checkIfSourceIsTarget(String source){
+        return sharedMap.values().contains("source");
     }
 
     @Override
