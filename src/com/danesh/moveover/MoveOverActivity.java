@@ -102,9 +102,9 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 convertView = inf.inflate(R.layout.row,null);
             }
             TextView label = (TextView) convertView.findViewById(R.id.source);
-            label.setText(getResources().getString(R.string.source_heading) + " " + sharedMap.keySet().toArray()[pos].toString());
+            label.setText(sharedMap.keySet().toArray()[pos].toString());
             label = (TextView) convertView.findViewById(R.id.destination);
-            label.setText(getResources().getString(R.string.dest_heading) + " " + sharedMap.values().toArray()[pos].toString());
+            label.setText(sharedMap.values().toArray()[pos].toString());
             return convertView;
         }
 
@@ -168,6 +168,13 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 showToast("Destination directory invalid or is not a directory");
                 return;
             }
+            if (!source.getText().toString().contains("/sdcard/") || !dest.getText().toString().contains("/sdcard/")){
+                ShellCommand root = new ShellCommand();
+                if (!root.canSU()){
+                    showToast("Root was not found");
+                    return;
+                }
+            }
             modifyPreference(1,"");
         }
     }
@@ -194,6 +201,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     public void modifyPreference(int mode, String preference){
+        print(preference);
         SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
         if (mode == 1){

@@ -5,6 +5,6 @@
 	<string name="dest_title">Destination folder :</string>
 	<string name="service_title">Service</string>
 	<string name="choose_title">Choose</string>
-	<string name="source_heading">Source :</string>
-	<string name="dest_heading">Destination :</string>
+	<string name="source_heading">Source : \u0020</string>
+	<string name="dest_heading">Destination : \u0020</string>
 </resources>
