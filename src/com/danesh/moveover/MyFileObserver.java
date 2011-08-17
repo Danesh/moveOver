@@ -20,7 +20,6 @@ public class MyFileObserver extends FileObserver{
 
     @Override
     public void onEvent(int event, String path) {
-        debugInfo(event,path);
         if ((FileObserver.CREATE & event)!=0) {
             File source = new File(sourcePath+path);
             File dest = new File(destPath+path);
@@ -45,36 +44,6 @@ public class MyFileObserver extends FileObserver{
             }
             return;
         }
-    }
-
-    private void debugInfo(int e, String path) {
-        String msg="";
-        if ((e&ACCESS)!=0){
-            msg = "ACCESS";
-        }else if ((e&ATTRIB)!=0){
-            msg = "ATTRIB";
-        }else if ((e&CLOSE_NOWRITE)!=0){
-            msg = "CLOSE_NOWRITE";
-        }else if ((e&CLOSE_WRITE)!=0){
-            msg = "CLOSE_WRITE";
-        }else if ((e&CREATE)!=0){
-            msg = "CREATE";
-        }else if ((e&DELETE)!=0){
-            msg = "DELETE";
-        }else if ((e&DELETE_SELF)!=0){
-            msg = "DELETE_SELF";
-        }else if ((e&MODIFY)!=0){
-            msg = "MODIFY";
-        }else if ((e&MOVED_FROM)!=0){
-            msg = "MOVED_FROM";
-        }else if ((e&MOVED_TO)!=0){
-            msg = "MOVED_TO";
-        }else if ((e&MOVE_SELF)!=0){
-            msg = "MOVE_SELF";
-        }else if ((e&OPEN)!=0){
-            msg = "OPEN";
-        }
-        MoveOverActivity.print("Mode : "+msg + " " + path);
     }
 
     public void copyDirectory(File sourceLocation , File targetLocation) throws IOException {
