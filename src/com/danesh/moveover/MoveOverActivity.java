@@ -50,11 +50,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         return sharedMap.get(item).toString();
     }
 
-    @Override
-    public void onStop(){
-        closeApp();
-    }
-
     private void closeApp() {
         System.runFinalizersOnExit(true);
         System.exit(0);

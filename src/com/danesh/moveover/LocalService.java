@@ -61,6 +61,7 @@ public class LocalService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String endPath = "";
         serviceRunning = true;
         displayNotification(0,"Service is running","Click to launch");
         for (String item : MoveOverActivity.sharedMap.keySet()){
@@ -68,8 +69,9 @@ public class LocalService extends Service {
             MyFileObserver newOne = new MyFileObserver(item,MoveOverActivity.getMap(item).toString());
             newOne.startWatching();
             for (File file : sourceDir.listFiles()){
-                if (file.isDirectory()){
-                    cycleThrough(file,MoveOverActivity.getMap(item) + file.getPath().replaceFirst(sourceDir.getPath()+"/", ""));
+                endPath = file.getPath().replaceFirst(sourceDir.getPath()+"/", "");
+                if (file.isDirectory() && !endPath.startsWith(".")){
+                    cycleThrough(file,MoveOverActivity.getMap(item) + endPath);
                 }
             }
         }
