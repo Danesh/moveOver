@@ -8,9 +8,12 @@ import android.content.SharedPreferences;
 public class BootReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context arg0, Intent arg1) {
-        SharedPreferences myPrefs = arg0.getSharedPreferences("storedArray", Context.MODE_PRIVATE);
-        MoveOverActivity.sharedMap = myPrefs.getAll();
-        Intent mine = new Intent(arg0, LocalService.class);
-        arg0.startService(mine);
+        SharedPreferences myPrefs = arg0.getSharedPreferences("storedPreferences", Context.MODE_PRIVATE);
+        if (myPrefs.getBoolean("startOnBoot", false)){
+            myPrefs = arg0.getSharedPreferences("storedArray", Context.MODE_PRIVATE);
+            MoveOverActivity.sharedMap = myPrefs.getAll();
+            Intent mine = new Intent(arg0, LocalService.class);
+            arg0.startService(mine);
+        }
     }
 }
