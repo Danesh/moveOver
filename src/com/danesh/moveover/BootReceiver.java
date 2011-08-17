@@ -12,8 +12,10 @@ public class BootReceiver extends BroadcastReceiver{
         if (myPrefs.getBoolean("startOnBoot", false)){
             myPrefs = arg0.getSharedPreferences("storedArray", Context.MODE_PRIVATE);
             MoveOverActivity.sharedMap = myPrefs.getAll();
-            Intent mine = new Intent(arg0, LocalService.class);
-            arg0.startService(mine);
+            if (!MoveOverActivity.sharedMap.isEmpty()){
+                Intent mine = new Intent(arg0, LocalService.class);
+                arg0.startService(mine);
+            }
         }
     }
 }
