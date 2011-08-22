@@ -100,6 +100,10 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
         case 0:
+            if (sharedMap.isEmpty()){
+                showToast("Nothing to track");
+                return true;
+            }
             Boolean isChecked = !item.isChecked();
             SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = myPrefs.edit();
