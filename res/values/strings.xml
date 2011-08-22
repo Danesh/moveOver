@@ -8,4 +8,5 @@
 	<string name="source_heading">Source : \u0020</string>
 	<string name="dest_heading">Destination : \u0020</string>
 	<string name="firstTime">Description:\nThis application allows you to keep two folders in sync, no matter where they are in your file system.\n\nNote :\nFiles added after activating service will not take effect.\nPress menu to toggle onBoot\nFolders that reside in partitions besides sdcard will require root</string>
+	<string name="missingOI">This app is required to browse your system. Alternatively you can enter the path manually.</string>
 </resources>

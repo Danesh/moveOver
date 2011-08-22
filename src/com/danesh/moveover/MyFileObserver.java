@@ -13,7 +13,6 @@ public class MyFileObserver extends FileObserver{
     String destPath,sourcePath;
     public MyFileObserver(String source, String dest) {
         super(source);
-        MoveOverActivity.print(source + " " + dest);
         sourcePath = source;
         destPath = dest;
     }
@@ -23,7 +22,6 @@ public class MyFileObserver extends FileObserver{
         if ((FileObserver.CREATE & event)!=0) {
             File source = new File(sourcePath+path);
             File dest = new File(destPath+path);
-            MoveOverActivity.print("Copy : " + source.toString() + " to : " + dest.toString());
             try {
                 copyDirectory(source,dest);
             } catch (IOException e) {

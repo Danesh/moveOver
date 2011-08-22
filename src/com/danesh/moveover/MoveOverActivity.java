@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,9 +35,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class MoveOverActivity extends Activity implements OnCheckedChangeListener,OnClickListener,OnItemClickListener,OnItemLongClickListener {
-    String sdcard = Environment.getExternalStorageDirectory().toString()+"/";
-    String sourceFolder = "/mnt/sdcard/DCIM";
-    String destFolder = "/mnt/sdcard/Test";
     EditText source,dest;
     ToggleButton service;
     ListView myList;
@@ -58,26 +54,22 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        print("------------------------------------------------");
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         mContext = getApplicationContext();
         final SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
         if (myPrefs.getBoolean("firstTime", true)){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Welcome to moveOver !")
-                   .setCancelable(false).setIcon(R.drawable.icon)
-                   .setMessage(getResources().getString(R.string.firstTime))
-                   .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int id) {
-                           myPrefs.edit().putBoolean("firstTime", false).apply();
-                       }
-                   }).show();
+            new AlertDialog.Builder(this).setTitle("Welcome to moveOver !")
+            .setCancelable(false).setIcon(R.drawable.icon)
+            .setMessage(getResources().getString(R.string.firstTime))
+            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    myPrefs.edit().putBoolean("firstTime", false).apply();
+                }
+            }).show();
         }
         source = (EditText)findViewById(R.id.source);
         dest = (EditText)findViewById(R.id.dest);
-        source.setText(sourceFolder);
-        dest.setText(destFolder);
         service = (ToggleButton)findViewById(R.id.toggleService);
         service.setChecked(LocalService.serviceRunning);
         service.setOnCheckedChangeListener(this);
@@ -103,8 +95,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         return true;
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -116,6 +106,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             prefsEditor.apply();
             item.setChecked(isChecked);
             item.setIcon( isChecked ? android.R.drawable.button_onoff_indicator_on : android.R.drawable.button_onoff_indicator_off);
+            showToast(isChecked ? "Service has started" : "Service has stopped");
             break;
         case 1:
             closeApp();
@@ -165,7 +156,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     public static void print(String msg){
-        System.out.println("Danny "+msg);
+        System.out.println("moveOver "+msg);
     }
 
     public void showToast(String msg) {
@@ -186,21 +177,31 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             if (appInstalledOrNot(intent)){
                 startActivityForResult(intent, arg0 == chooseSource ? 0 : 1);
             }else{
-                showToast("OI file manager not found");
-                intent = new Intent( Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:org.openintents.filemanager"));
-                startActivity(intent);
+                new AlertDialog.Builder(this).setTitle("OI File manager was not found")
+                .setCancelable(false)
+                .setMessage(getResources().getString(R.string.missingOI))
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }).setNegativeButton("Go to market", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent marketIntent = new Intent("org.openintents.action.PICK_DIRECTORY");
+                        marketIntent = new Intent( Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:org.openintents.filemanager"));
+                        startActivity(marketIntent);
+                    }
+                }).show();
             }
         }else if (arg0 == add){
             String sourceText = source.getText().toString();
             String destText = dest.getText().toString();
-            File testsource = new File(sourceText);
-            File testdest = new File(destText);
             if (sourceText.charAt(sourceText.length()-1)!='/'){
                 source.setText(sourceText+"/");
             }
             if (destText.charAt(destText.length()-1)!='/'){
                 dest.setText(destText+"/");
             }
+            File testsource = new File(sourceText);
+            File testdest = new File(destText);
             if (!testsource.isDirectory()){
                 showToast("Source directory invalid or is not a directory");
                 return;
@@ -226,6 +227,10 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             }
             if (checkIfMappingAlreadyExists(sourceText,destText)){
                 showToast("This mapping already exists");
+                return;
+            }
+            if (!testsource.canRead() || !testdest.canWrite()){
+                showToast("Cannot be granted access");
                 return;
             }
             modifyPreference(1,"");
