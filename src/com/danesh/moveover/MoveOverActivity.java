@@ -62,6 +62,18 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         mContext = getApplicationContext();
+        final SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
+        if (myPrefs.getBoolean("firstTime", true)){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Welcome to moveOver !")
+                   .setCancelable(false).setIcon(R.drawable.icon)
+                   .setMessage(getResources().getString(R.string.firstTime))
+                   .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                           myPrefs.edit().putBoolean("firstTime", false).apply();
+                       }
+                   }).show();
+        }
         source = (EditText)findViewById(R.id.source);
         dest = (EditText)findViewById(R.id.dest);
         source.setText(sourceFolder);
