@@ -21,7 +21,7 @@
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<EditText android:layout_weight="1" android:singleLine="true"
-			android:layout_width="match_parent" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/source" />
 		<Button android:text="@string/choose_title" android:id="@+id/chooseSource"
 			android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -31,7 +31,7 @@
 	<LinearLayout android:orientation="horizontal"
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<EditText android:layout_weight="1" android:singleLine="true"
-			android:layout_width="match_parent" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/dest" />
 		<Button android:text="@string/choose_title" android:id="@+id/chooseDest"
 			android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -47,5 +47,5 @@
 			android:layout_height="wrap_content" />
 	</RelativeLayout>
 	<ListView android:id="@+id/listView1" android:layout_height="wrap_content"
-		android:layout_width="match_parent" android:layout_marginLeft="5dp" />
+		android:layout_width="fill_parent" android:layout_marginLeft="5dp" />
 </LinearLayout>

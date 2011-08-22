@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,7 +65,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             .setMessage(getResources().getString(R.string.firstTime))
             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    myPrefs.edit().putBoolean("firstTime", false).apply();
+                    myPrefs.edit().putBoolean("firstTime", false).commit();
                 }
             }).show();
         }
@@ -103,7 +104,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = myPrefs.edit();
             prefsEditor.putBoolean("startOnBoot", isChecked);
-            prefsEditor.apply();
+            prefsEditor.commit();
             item.setChecked(isChecked);
             item.setIcon( isChecked ? android.R.drawable.button_onoff_indicator_on : android.R.drawable.button_onoff_indicator_off);
             showToast(isChecked ? "Service has started" : "Service has stopped");
@@ -186,7 +187,11 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 }).setNegativeButton("Go to market", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent marketIntent = new Intent("org.openintents.action.PICK_DIRECTORY");
-                        marketIntent = new Intent( Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:org.openintents.filemanager"));
+                        try{
+                            marketIntent = new Intent( Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:org.openintents.filemanager"));
+                        }catch (ActivityNotFoundException e){
+                            e.printStackTrace();
+                        }
                         startActivity(marketIntent);
                     }
                 }).show();
@@ -276,7 +281,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         }else{
             prefsEditor.remove(preference);
         }
-        prefsEditor.apply();
+        prefsEditor.commit();
         setAdapter();
     }
 
