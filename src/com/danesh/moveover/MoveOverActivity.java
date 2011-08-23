@@ -7,7 +7,6 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,7 +38,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     EditText source,dest;
     ToggleButton service;
     ListView myList;
-    Context mContext;
     Button add,chooseSource,chooseDest;
     static Map<String, ?> sharedMap;
 
@@ -57,8 +55,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
-        mContext = getApplicationContext();
-        final SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
+        final SharedPreferences myPrefs = this.getSharedPreferences("storedPreferences", MODE_PRIVATE);
         if (myPrefs.getBoolean("firstTime", true)){
             new AlertDialog.Builder(this).setTitle("Welcome to moveOver !")
             .setCancelable(false).setIcon(R.drawable.icon)
@@ -69,6 +66,9 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 }
             }).show();
         }
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.firstRun())
+            cl.getLogDialog().show();
         source = (EditText)findViewById(R.id.source);
         dest = (EditText)findViewById(R.id.dest);
         service = (ToggleButton)findViewById(R.id.toggleService);
@@ -88,7 +88,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
+        SharedPreferences myPrefs = this.getSharedPreferences("storedPreferences", MODE_PRIVATE);
         Boolean isChecked = myPrefs.getBoolean("startOnBoot", false);
         menu.add(Menu.NONE, 0, Menu.NONE, "Start onBoot").setIcon( isChecked ? android.R.drawable.button_onoff_indicator_on :
             android.R.drawable.button_onoff_indicator_off).setCheckable(true).setChecked(isChecked);
@@ -105,7 +105,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 return true;
             }
             Boolean isChecked = !item.isChecked();
-            SharedPreferences myPrefs = mContext.getSharedPreferences("storedPreferences", MODE_PRIVATE);
+            SharedPreferences myPrefs = this.getSharedPreferences("storedPreferences", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = myPrefs.edit();
             prefsEditor.putBoolean("startOnBoot", isChecked);
             prefsEditor.commit();
@@ -121,7 +121,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     private void setAdapter() {
-        SharedPreferences myPrefs = mContext.getSharedPreferences("storedArray", MODE_PRIVATE);
+        SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         sharedMap = myPrefs.getAll();
         myList.setAdapter(new IconicAdapter());
     }
@@ -276,7 +276,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
     }
 
     public void modifyPreference(int mode, String preference){
-        SharedPreferences myPrefs = mContext.getSharedPreferences("storedArray", MODE_PRIVATE);
+        SharedPreferences myPrefs = this.getSharedPreferences("storedArray", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = myPrefs.edit();
         if (mode == 1){
             prefsEditor.putString(source.getText().toString(), dest.getText().toString());
