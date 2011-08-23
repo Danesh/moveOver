@@ -41,7 +41,7 @@ public class ChangeLog {
     public ChangeLog(Context context) {
         this.context = context;
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sp = context.getSharedPreferences("storedPreferences", Context.MODE_PRIVATE);
 
         // get version numbers
         this.lastVersion = sp.getString(VERSION_KEY, "");
