@@ -257,7 +257,11 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                     modifyPreference(1,"");
                 }
             });
-            builder.create().show();
+            if (testsource.list().length>0){
+                builder.create().show();
+            }else{
+                modifyPreference(1,"");
+            }
         }
     }
 
