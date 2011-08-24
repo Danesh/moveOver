@@ -11,7 +11,8 @@
 		two folders in sync, no matter where they are in your file
 		system.\n\nNote :\nFiles added after activating service will not take
 		effect.\nPress menu to toggle onBoot\nFolders that reside in
-		partitions besides sdcard will require root</string>
+		partitions besides sdcard will require root\nLongpress item to
+		delete\nSingle tap to edit</string>
 	<string name="missingOI">This app is required to browse your system.
 		Alternatively you can enter the path manually.</string>
 	<string name="changelog_full_title">Change Log</string>

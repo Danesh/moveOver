@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="5dp"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:focusable="true"
-	android:focusableInTouchMode="true" android:background="#EE000000">
+	android:paddingTop="5dp" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:focusable="true" android:focusableInTouchMode="true"
+	android:background="#EE000000">
 	<!-- Application title heading -->
-	<RelativeLayout android:layout_height="wrap_content"
-		android:layout_width="fill_parent">
-		<TextView android:text="MoveOver - Beta"
-			android:layout_centerInParent="true" android:layout_width="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:layout_height="wrap_content" />
-		<ImageView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:src="@drawable/icon" />
-		<ImageView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:src="@drawable/icon"
-			android:layout_alignParentRight="true" />
-	</RelativeLayout>
+	<TextView android:background="#222222" android:textSize="19dp" android:text="MoveOver - Beta"
+		android:gravity="center_horizontal" android:layout_width="fill_parent"
+		android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
+		android:layout_height="wrap_content" />
 	<TextView android:text="@string/source_title"
 		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	<LinearLayout android:orientation="horizontal"
@@ -47,6 +39,9 @@
 			android:id="@+id/add" android:layout_width="95dp"
 			android:layout_height="wrap_content" />
 	</RelativeLayout>
-	<ListView android:id="@+id/listView1" android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:layout_marginLeft="5dp" />
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Tracked items"
+		android:textSize="18dp" android:background="#222222" android:gravity="center_horizontal" />
+	<ListView android:layout_marginTop="5dp" android:id="@+id/listView1" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_marginLeft="5dp" android:scrollbars="none" />
 </LinearLayout>

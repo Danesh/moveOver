@@ -117,7 +117,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             prefsEditor.commit();
             item.setChecked(isChecked);
             item.setIcon( isChecked ? android.R.drawable.button_onoff_indicator_on : android.R.drawable.button_onoff_indicator_off);
-            showToast(isChecked ? "Service has started" : "Service has stopped");
             break;
         case 1:
             closeApp();
@@ -159,6 +158,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             return;
         }
         Intent mine = new Intent(this, LocalService.class);
+        showToast(isChecked ? "Service has started" : "Service has stopped");
         if (isChecked){
             startService(mine);
         }else{
