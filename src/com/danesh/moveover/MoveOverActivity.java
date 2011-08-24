@@ -52,11 +52,6 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         return sharedMap.get(item).toString();
     }
 
-    private void closeApp() {
-        System.runFinalizersOnExit(true);
-        System.exit(0);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +114,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             item.setIcon( isChecked ? android.R.drawable.button_onoff_indicator_on : android.R.drawable.button_onoff_indicator_off);
             break;
         case 1:
-            closeApp();
+            this.finish();
             break;
         }
         return true;
