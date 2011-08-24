@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.WebView;
 
@@ -128,10 +127,7 @@ public class ChangeLog {
         wv.loadData(this.getLog(full), "text/html", "UTF-8");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-        builder.setTitle(context.getResources().getString(
-                full 
-                ? R.string.changelog_full_title
-                        : R.string.changelog_title))
+        builder
                         .setView(wv)
                         .setCancelable(false)
                         .setPositiveButton(

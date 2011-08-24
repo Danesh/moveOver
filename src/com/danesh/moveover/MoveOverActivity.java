@@ -56,7 +56,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         final ChangeLog cl = new ChangeLog(this);
-        if (cl.firstRun()){
+        if (cl.firstRunEver()){
             new AlertDialog.Builder(this).setTitle("Welcome to moveOver !")
             .setCancelable(false).setIcon(R.drawable.icon)
             .setMessage(getResources().getString(R.string.firstTime))
@@ -65,7 +65,7 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                     cl.getLogDialog().show();
                 }
             }).show();
-        }else{
+        }else if (cl.firstRun()){
             cl.getLogDialog().show();
         }
         source = (EditText)findViewById(R.id.source);
