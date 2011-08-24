@@ -1,11 +1,17 @@
 package com.danesh.moveover;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -208,8 +215,8 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
             if (destText.charAt(destText.length()-1)!='/'){
                 dest.setText(destText+"/");
             }
-            File testsource = new File(sourceText);
-            File testdest = new File(destText);
+            final File testsource = new File(sourceText);
+            final File testdest = new File(destText);
             if (!testsource.isDirectory()){
                 showToast("Source directory invalid or is not a directory");
                 return;
@@ -241,7 +248,74 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
                 showToast("Cannot be granted access");
                 return;
             }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to copy current files ?")
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ProgressDialog copyDialog = ProgressDialog.show(MoveOverActivity.this, "","Copying. Please wait...", true);
+                    new MyTask(testsource,testdest,copyDialog).execute();
+                }
+            })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    modifyPreference(1,"");
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+    public class MyTask extends AsyncTask<Void, Void, Void> {
+        ProgressDialog progDialog;
+        File source,dest;
+        public MyTask(File oSource, File oDest, ProgressDialog oProgDialog) {
+            progDialog = oProgDialog;
+            source = oSource;
+            dest = oDest;
+        }
+
+        public void onPreExecute() {
+            progDialog.show();
+        }
+
+        public void onPostExecute(Void unused) {
+            progDialog.dismiss();
             modifyPreference(1,"");
+            showToast("Folder copied");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                copyDirectory(source,dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public void copyDirectory(File sourceLocation,File targetLocation) throws IOException {
+        if (sourceLocation.isDirectory()) {
+            if (!targetLocation.exists()) {
+                targetLocation.mkdir();
+            }
+            String[] children = sourceLocation.list();
+            for (int i=0; i<children.length; i++) {
+                copyDirectory(new File(sourceLocation, children[i]),
+                        new File(targetLocation, children[i]));
+            }
+        } else {
+            InputStream in = new FileInputStream(sourceLocation);
+            OutputStream out = new FileOutputStream(targetLocation);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
         }
     }
 
