@@ -204,6 +204,10 @@ public class MoveOverActivity extends Activity implements OnCheckedChangeListene
         }else if (arg0 == add){
             String sourceText = source.getText().toString();
             String destText = dest.getText().toString();
+            if (sourceText.length()<=1 || sourceText.length()<=1){
+                showToast("Invalid source/dest entries");
+                return;
+            }
             if (sourceText.charAt(sourceText.length()-1)!='/'){
                 source.setText(sourceText+"/");
             }
