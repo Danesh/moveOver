@@ -20,6 +20,9 @@
     </style>
   </head>
   <body>
+$ 1.2
+  % Version 1.2
+   * Fixed force close on empty text
 $ 1.1
   % Version 1.1
    * Added ldpi/mdpi icons
